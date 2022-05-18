@@ -1,0 +1,115 @@
+#include <iostream>
+#include <vector>
+#include <time.h>
+
+using namespace std;
+
+void generate(int n,vector < vector <int> > &v);
+void sum(int n,vector <  vector <int> > &v1,vector <  vector <int> > &v2,vector <  vector <int> > &v3);
+int vec_product(int n,vector <  vector <int> > &v1,vector <  vector <int> > &v2);
+int sum_vec_product(int n,vector <  vector <int> > &v1,vector <  vector <int> > &v2);
+
+int main() {
+    srand((unsigned)time(NULL));
+    setlocale(LC_ALL, "rus");
+    vector < vector <int> > a1;
+    vector < vector <int> > a2;
+    vector < vector <int> > a3;
+    int n=20;
+    generate(n, a1);
+    generate(n, a2);
+    sum(n, a1, a2, a3);
+    for(int i=0; i<a3.size(); i++){
+        cout << a3[i][0] << "\t" << a3[i][1] << endl;
+    }
+    cout << "------------------"<<endl;
+    cout << vec_product(n, a1, a2) << endl;
+    cout << sum_vec_product(n,a1,a2) << endl;
+    return 0;
+}
+void generate(int n,vector < vector <int> > &v){
+    int k=0;
+    vector <int> vec(2);
+    for(int i=0; i<n; i++){
+        int num = rand() % 10;
+        if (num == 0) {
+            vec.clear();
+            k = rand() % 100;
+            vec.push_back(k);
+            vec.push_back(i);
+            v.push_back(vec);
+        }
+    }
+}
+void sum(int n,vector <  vector <int> > &v1,vector <  vector <int> > &v2,vector <  vector <int> > &v3){
+    vector <int> vec(2);
+    int k=2;
+    int m=0;
+    for(int i=0; i<n; i++){
+        vec.clear();
+        vec.push_back(k);
+        vec.push_back(i);
+        v3.push_back(vec);
+    }
+    for(int i=0; i<v1.size(); i++){
+        k=v1[i][1];
+        m=v1[i][k];
+        v3[k][0]+=m-1;
+    }
+    for(int i=0; i<v2.size(); i++){
+        k=v2[i][1];
+        m=v2[i][k];
+        v3[k][0]+=m-1;
+    }
+}
+int vec_product(int n,vector <  vector <int> > &v1,vector <  vector <int> > &v2){
+    int res=1;
+    for(int i=0;i<n;i++){
+        for (int l = 0; l<v1.size(); l++) {
+            for (int k=0; k<v2.size(); k++) {
+                
+                if(i != v1[l][1] && i != v2[k][1]){
+                    res++;
+                }
+            }
+        }
+    }
+    for (int i=0; i<v1.size(); i++){
+        for (int k=0; k<v2.size();k++){
+            if(v1[i][1]==v2[k][1]){
+                res += v1[i][0]*v2[k][0];
+            }
+            else{
+                res += v1[i][0];
+            }
+        }
+    }
+    for (int i=0; i<v1.size(); i++){
+        for (int k=0; k<v2.size();k++){
+            if (v1[i][1]!=v2[k][1]){
+                res += v1[i][0];
+            }
+        }
+    }
+    return res;
+}
+int sum_vec_product(int n,vector < vector <int> > &v1,vector <  vector <int> > &v2){
+    int res=0;
+    int k;
+    for(int i=0;i<n;i++){
+        res++;
+        for(int j=i;j<v1.size();j++){
+            if(i==v1[j][1]){
+                k=v1[j][0]*v1[j][0];
+                res+=k-1;
+            }
+        }
+        for(int l=i;l<v2.size();l++){
+            if(i==v2[l][1]){
+                k=v2[l][0]*v2[l][0];
+                res+=k-1;
+            }
+        }
+    }
+    return res;
+}
